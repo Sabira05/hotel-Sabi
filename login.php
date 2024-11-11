@@ -76,17 +76,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             border: 1px solid #ccc;
             border-radius: 4px;
         }
+        .button-container {
+            display: flex;
+            justify-content: space-between; /* Батырмаларды екі жаққа орналастыру */
+            gap: 10px;
+        }
         button {
-            background-color: green;
-            color: white;
             padding: 10px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             width: 100%;
+            font-size: 16px;
         }
-        button:hover {
+        .login-button {
+            background-color: green;
+            color: white;
+        }
+        .login-button:hover {
             background-color: #219150;
+        }
+        .register-button {
+            background-color: #007bff;
+            color: white;
+        }
+        .register-button:hover {
+            background-color: #0056b3;
         }
         .error {
             color: red;
@@ -95,7 +110,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </style>
 </head>
 <body>
-    <div class="logo">Логотип</div>
+    <div class="logo"><img src="hotel_logotip.png" alt="Логотип" class="logo"> </div>
     
     <?php if (isset($_SESSION["username"])): ?>
         <h3>Қош келдіңіз, <?php echo htmlspecialchars($_SESSION["username"]); ?>!</h3>
@@ -108,7 +123,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <label for="password">Пароль:</label>
         <input type="password" id="password" name="password" required>
 
-        <button type="submit">Кіру</button>
+        <div class="button-container">
+            <button type="submit" class="login-button">Кіру</button>
+            <button type="button" class="register-button" onclick="window.location.href='register1.html'">Тіркелу</button>
+        </div>
     </form>
 </body>
 </html>
