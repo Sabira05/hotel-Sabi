@@ -26,7 +26,10 @@
         .logo {
             display: block;
             margin: 0 auto 20px;
-            width: 80%;
+            width: 120px; /* Логотиптің ені */
+            height: 120px; /* Логотиптің биіктігі */
+            border-radius: 50%; /* Логотипті шеңбер етіп көрсету үшін */
+            object-fit: cover; /* Пропорцияны сақтау */
         }
         label {
             font-weight: bold;
@@ -62,7 +65,7 @@
 </head>
 <body>
     <div class="container">
-        <img src="https://avatars.mds.yandex.net/get-ydo/1449941/2a0000016e2dd99c2b32388338cfaf353be1/diploma" alt="Логотип" class="logo"> <!-- Логотип -->
+        <img src="C:\Users\Lenovo\Downloads\hotel logotip.png" alt="Логотип" class="logo"> <!-- Логотип -->
         <h2>Тіркелу</h2>
         <form action="register.php" method="post"> <!-- PHP файлына байланыс -->
             <label for="username">Пайдаланушы аты:</label>
