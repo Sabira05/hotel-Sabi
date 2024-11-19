@@ -49,7 +49,7 @@ $result = $conn->query($sql);
         </li>
     <?php endwhile; ?>
 </ul>
-
+<a href="index.php">Басты бетке оралу</a>
 </body>
 </html>
 
