@@ -1,122 +1,93 @@
 <?php
 session_start();
-require 'config.php'; // config.php арқылы дерекқорға қосылу
+require 'config.php'; // Дерекқор конфигурациясы
 
-// Логин формасы жіберілгенін тексеру
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = trim($_POST['username']);
     $password = trim($_POST['password']);
 
-    // Пайдаланушы аты мен құпия сөзді тексеру
     if (empty($username) || empty($password)) {
-        echo "<div class='error'>Пайдаланушы аты мен құпия сөзді енгізіңіз.</div>";
-        exit;
-    }
-
-    // Пайдаланушыны табу
-    $stmt = $pdo->prepare("SELECT * FROM registration WHERE username = :username");
-    $stmt->bindParam(':username', $username);
-    $stmt->execute();
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if ($user && password_verify($password, $user['password'])) {
-        $_SESSION['username'] = $user['username'];
-        header("Location: index.php"); // Сәтті логин болса, басты бетке бағыттау
-        exit();
+        $error = "Пайдаланушы аты мен құпия сөзді енгізіңіз.";
     } else {
-        echo "<div class='error'>Қате: пайдаланушы аты немесе пароль дұрыс емес.</div>";
+        // Пайдаланушыны дерекқордан іздеу
+        $stmt = $pdo->prepare("SELECT * FROM registration WHERE username = :username");
+        $stmt->bindParam(':username', $username);
+        $stmt->execute();
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($user && password_verify($password, $user['password'])) {
+            $_SESSION['username'] = $user['username']; // Сеансты бастау
+            header("Location: index.php"); // Басты бетке бағыттау
+            exit();
+        } else {
+            $error = "Қате: пайдаланушы аты немесе пароль дұрыс емес.";
+        }
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="kk">
 <head>
     <meta charset="UTF-8">
     <title>Кіру</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f4f8; /* Жеңіл көкшіл фон */
-            color: #2c3e50;
+            font-family: 'Poppins', sans-serif;
+            background: url(https://m.ahstatic.com/is/image/accorhotels/aja_p_5629-25?qlt=82&wid=1920&ts=1710944159228&dpr=off) no-repeat center center fixed; /* Фонға сурет */
+            background-size: cover;
+            color: #6d4c41;
             margin: 0;
             padding: 20px;
             text-align: center;
         }
-        .logo {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background-color: #27ae60;
-            margin: 20px auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 24px;
-            font-weight: bold;
-        }
-
         form {
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: rgba(255, 255, 255, 0.85); /* Ашық ақ фон */
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
             max-width: 400px;
-            margin: auto;
-        }
-        label {
-            display: block;
-            margin: 10px 0 5px;
+            margin: 50px auto;
         }
         input[type="text"], input[type="password"] {
             width: 100%;
-            padding: 10px;
-            margin: 5px 0 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
         }
         .button-container {
             display: flex;
-            justify-content: space-between; /* Батырмаларды екі жаққа орналастыру */
             gap: 10px;
+            margin-top: 20px;
         }
         button {
-            padding: 10px;
+            background-color: #d8b894;
+            color: white;
             border: none;
             border-radius: 5px;
-            cursor: pointer;
-            width: 100%;
+            padding: 10px;
             font-size: 16px;
+            cursor: pointer;
+            width: 48%;
+            transition: background-color 0.3s;
         }
-        .login-button {
-            background-color: green;
-            color: white;
-        }
-        .login-button:hover {
-            background-color: #219150;
-        }
-        .register-button {
-            background-color: #007bff;
-            color: white;
-        }
-        .register-button:hover {
-            background-color: #0056b3;
+        button:hover {
+            background-color: #b89e85;
         }
         .error {
             color: red;
-            margin: 10px 0;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="logo"><img src="hotel_logotip.png" alt="Логотип" class="logo"> </div>
-    
-    <?php if (isset($_SESSION["username"])): ?>
-        <h3>Қош келдіңіз, <?php echo htmlspecialchars($_SESSION["username"]); ?>!</h3>
-    <?php endif; ?>
-    
     <form action="login.php" method="post">
+        <h2>Кіру</h2>
+        <?php if (!empty($error)): ?>
+            <div class="error"><?php echo htmlspecialchars($error); ?></div>
+        <?php endif; ?>
+
         <label for="username">Пайдаланушы аты:</label>
         <input type="text" id="username" name="username" required>
 
@@ -124,8 +95,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <input type="password" id="password" name="password" required>
 
         <div class="button-container">
-            <button type="submit" class="login-button">Кіру</button>
-            <button type="button" class="register-button" onclick="window.location.href='register1.html'">Тіркелу</button>
+            <button type="submit">Кіру</button>
+            <button type="button" onclick="window.location.href='register1.html'">Тіркелу</button>
         </div>
     </form>
 </body>
