@@ -155,6 +155,21 @@
         .social-links a.whatsapp {
             background-color: #25D366;
         }
+        .back-to-home {
+            margin-top: 20px;
+            display:inline-block;
+            padding: 5px 10px;
+            background-color: #d8c3a5;
+            color: white;
+            text-decoration: none;
+            border-radius: 1px;
+            font-size: 0.9rem;
+            width: auto; /* Автоматты түрде енін қысқартады */
+            white-space: nowrap;
+        }
+        .back-to-home:hover {
+            background-color: #c3ac8f;
+        }
     </style>
 </head>
 <body>
@@ -162,7 +177,6 @@
 <div class="overlay"></div>
 
 <div class="container">
-    <img src="" alt="Golden Star Қонақ Үйі">
     <h1>Алматыдағы "Golden Star" Қонақ Үйі</h1>
     <h2>"Тау бөктеріндегі сән-салтанат мекені"</h2>
     <div class="slider">
@@ -205,8 +219,7 @@
         </a>
     </div>
 </div>
-
-    <a href="index.php">Басты бетке оралу</a>
+    <a href="index.php" class="back-to-home">Басты бетке оралу</a>
 </div>
 <script>
         const images = document.querySelectorAll('.slider img');
