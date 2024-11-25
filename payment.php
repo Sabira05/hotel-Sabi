@@ -15,7 +15,7 @@ $room_prices = [
 ];
 
 // Параметрлерді алу
-$room_type = 'standard'; // Тұрақты бөлме түрі
+$room_type = $_GET['room_type'] ?? 'standard'; // Пайдаланушы таңдаған бөлме түрі
 $checkin_date = $_GET['checkin_date'] ?? null;
 $checkout_date = $_GET['checkout_date'] ?? null;
 
@@ -126,13 +126,14 @@ $conn->close();
 <body>
     <h1>Төлем жасау</h1>
 
-    <p>Сіз таңдаған бөлме түрі: Standard</p>
-    <p>Күніне бағасы: <?= number_format($room_price_per_day, 2) ?> ₸</p>
-    <p>Тұру ұзақтығы: <?= $total_days ?> күн</p>
-    <div class="total-amount">Жалпы сомасы: <?= number_format($total_amount, 2) ?> ₸</div>
-
-    <!-- Соманы есептеу -->
     <form action="" method="GET">
+        <label for="room_type">Бөлме түрі:</label>
+        <select id="room_type" name="room_type">
+            <option value="standard" <?= $room_type === 'standard' ? 'selected' : '' ?>>Standard</option>
+            <option value="deluxe" <?= $room_type === 'deluxe' ? 'selected' : '' ?>>Deluxe</option>
+            <option value="suite" <?= $room_type === 'suite' ? 'selected' : '' ?>>Suite</option>
+        </select>
+
         <label for="checkin_date">Кіру күні:</label>
         <input type="date" id="checkin_date" name="checkin_date" value="<?= htmlspecialchars($checkin_date) ?>" required>
 
@@ -141,6 +142,11 @@ $conn->close();
 
         <button type="submit">Соманы есептеу</button>
     </form>
+
+    <p>Сіз таңдаған бөлме түрі: <?= ucfirst($room_type) ?></p>
+    <p>Күніне бағасы: <?= number_format($room_price_per_day, 2) ?> ₸</p>
+    <p>Тұру ұзақтығы: <?= $total_days ?> күн</p>
+    <div class="total-amount">Жалпы сомасы: <?= number_format($total_amount, 2) ?> ₸</div>
 
     <!-- Төлем жасау -->
     <form action="" method="POST" class="payment-form">
@@ -167,6 +173,6 @@ $conn->close();
     <?php endif; ?>
 
     <!-- Басты бетке өту кнопкасы -->
-    <a href="index.php">Басты бетке оралу</a>
+    <a href="index.php" class="back-to-home">Басты бетке оралу</a>
 </body>
 </html>
