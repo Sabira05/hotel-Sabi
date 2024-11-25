@@ -139,7 +139,7 @@ if (!isset($_SESSION["username"])) {
     <!-- Мәзір батырмалары орналасқан бөлім -->
     <div id="menu-overlay">
         <a href="rooms.php" class="menu-btn">Бөлмелер</a>
-        <a href=".php" class="menu-btn">Біз туралы</a>
+        <a href="hotel_info.php" class="menu-btn">Біз туралы</a>
         <a href="settings.php" class="menu-btn">Настройка</a>
         <a href="logout.php" class="menu-btn">Шығу</a>
     </div>
