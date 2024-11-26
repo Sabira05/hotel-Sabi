@@ -15,63 +15,55 @@ $room_prices = [
 ];
 
 // Параметрлерді алу
-$room_type = $_GET['room_type'] ?? 'standard'; // Пайдаланушы таңдаған бөлме түрі
+$room_type = $_GET['room_type'] ?? 'standard';
 $checkin_date = $_GET['checkin_date'] ?? null;
 $checkout_date = $_GET['checkout_date'] ?? null;
 
-// Әр бөлме түрінің бағасын алу
-$room_price_per_day = $room_prices[$room_type] ?? 0;
-
 // Жалпы соманы есептеу
+$room_price_per_day = $room_prices[$room_type] ?? 0;
 $total_days = 0;
 $total_amount = 0;
 
-if ($checkin_date && $checkout_date) {
+if (!empty($checkin_date) && !empty($checkout_date)) {
     try {
         $checkin = new DateTime($checkin_date);
         $checkout = new DateTime($checkout_date);
 
-        $interval = $checkin->diff($checkout);
-        $total_days = max($interval->days, 0);
-
-        if ($total_days > 0) {
+        if ($checkout > $checkin) {
+            $interval = $checkin->diff($checkout);
+            $total_days = $interval->days;
             $total_amount = $total_days * $room_price_per_day;
+        } else {
+            $error_message = "Шығу күні кіру күнінен кейін болуы керек.";
         }
     } catch (Exception $e) {
-        echo "Күндер дұрыс емес: " . $e->getMessage();
+        $error_message = "Күндер дұрыс емес: " . $e->getMessage();
     }
 }
 
 // Дерекқорға қосылу
 $conn = new mysqli("localhost", "root", "", "hotel_booking");
-
 if ($conn->connect_error) {
     die("Дерекқорға қосылу қатесі: " . $conn->connect_error);
 }
 
-// Төлем сәтті жасалған жағдайда хабарлама көрсету және деректерді дерекқорға енгізу
+// Төлем жасау
 $payment_success = false;
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    // Карта мәліметтерін алу
     $card_number = $_POST['card_number'] ?? null;
     $card_expiry_month = $_POST['card_expiry_month'] ?? null;
     $card_expiry_year = $_POST['card_expiry_year'] ?? null;
     $card_cvv = $_POST['card_cvv'] ?? null;
 
-    // Дерекқорға мәліметтерді енгізу
     if (!empty($card_number) && !empty($card_expiry_month) && !empty($card_expiry_year) && !empty($card_cvv)) {
-        // SQL сұрауын дайындау
         $stmt = $conn->prepare("INSERT INTO payment (room_type, amount_paid, card_number, card_expiry, card_cvv, checkin_date, checkout_date) VALUES (?, ?, ?, ?, ?, ?, ?)");
-
         if ($stmt === false) {
-            die('SQL сұрауы қатесі: ' . $conn->error);
+            die('SQL қатесі: ' . $conn->error);
         }
 
-        // Параметрлерді байлау
         $card_expiry = $card_expiry_month . '/' . $card_expiry_year;
         $stmt->bind_param("sssssss", $room_type, $total_amount, $card_number, $card_expiry, $card_cvv, $checkin_date, $checkout_date);
 
-        // Сұрауды орындау
         if ($stmt->execute()) {
             $payment_success = true;
         } else {
@@ -108,10 +100,9 @@ $conn->close();
         .container {
             width: 90%;
             max-width: 600px;
-            background: rgba(255, 255, 255, 0.9); /* Ақ түс, мөлдірлік */
+            background: rgba(255, 255, 255, 0.9);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             border-radius: 10px;
-            overflow: hidden;
             padding: 20px;
             text-align: center;
         }
@@ -134,7 +125,7 @@ $conn->close();
         }
 
         select, input {
-            width: 100%;
+            width: 90%;
             padding: 10px;
             font-size: 14px;
             border: 1px solid #ccc;
@@ -145,7 +136,7 @@ $conn->close();
         button {
             width: 100%;
             padding: 10px;
-            background: #d8c3a5; /* Бежевый түс */
+            background: #d8c3a5;
             border: none;
             color: white;
             font-size: 16px;
@@ -174,7 +165,7 @@ $conn->close();
             margin-top: 20px;
             display: block;
             padding: 10px 20px;
-            background-color: #d8c3a5; /* Бежевый түс */
+            background-color: #d8c3a5;
             color: white;
             text-decoration: none;
             border-radius: 5px;
@@ -188,72 +179,68 @@ $conn->close();
 <body>
     <div class="container">
         <h1>Төлем жасау</h1>
-        <form action="" method="POST">
+        <form method="GET">
             <label for="room_type">Бөлме түрі:</label>
             <select id="room_type" name="room_type">
-                <option value="standard" <?php echo $room_type == 'standard' ? 'selected' : ''; ?>>Standard</option>
-                <option value="deluxe" <?php echo $room_type == 'deluxe' ? 'selected' : ''; ?>>Deluxe</option>
-                <option value="suite" <?php echo $room_type == 'suite' ? 'selected' : ''; ?>>Suite</option>
+                <option value="standard" <?= $room_type == 'standard' ? 'selected' : '' ?>>Standard</option>
+                <option value="deluxe" <?= $room_type == 'deluxe' ? 'selected' : '' ?>>Deluxe</option>
+                <option value="suite" <?= $room_type == 'suite' ? 'selected' : '' ?>>Suite</option>
             </select>
 
             <label for="checkin_date">Кіру күні:</label>
-            <input type="date" id="checkin_date" name="checkin_date" value="<?php echo $checkin_date; ?>" required>
+            <input type="date" id="checkin_date" name="checkin_date" value="<?= $checkin_date ?>" required>
 
             <label for="checkout_date">Шығу күні:</label>
-            <input type="date" id="checkout_date" name="checkout_date" value="<?php echo $checkout_date; ?>" required>
+            <input type="date" id="checkout_date" name="checkout_date" value="<?= $checkout_date ?>" required>
 
-            <div class="total-amount">
-                <?php if ($total_days > 0 && $total_amount > 0): ?>
-                    <p>Жалпы сомасы: <?php echo number_format($total_amount, 0, '.', ' ') ?> тг</p>
-                <?php endif; ?>
-            </div>
-
-            <label for="card_number">Карта нөмірі:</label>
-            <input type="text" id="card_number" name="card_number" required>
-
-            <label for="card_expiry">Карта мерзімі (ММ/ЖЖ):</label>
-            <div style="display: flex; justify-content: space-between;">
-                <select id="card_expiry_month" name="card_expiry_month" required>
-                    <option value="">Ай</option>
-                    <option value="01">01</option>
-                    <option value="02">02</option>
-                    <option value="03">03</option>
-                    <option value="04">04</option>
-                    <option value="05">05</option>
-                    <option value="06">06</option>
-                    <option value="07">07</option>
-                    <option value="08">08</option>
-                    <option value="09">09</option>
-                    <option value="10">10</option>
-                    <option value="11">11</option>
-                    <option value="12">12</option>
-                </select>
-
-                <select id="card_expiry_year" name="card_expiry_year" required>
-                    <option value="">Жыл</option>
-                    <?php
-                    // Қазіргі жыл мен келесі 10 жылды көрсету
-                    $current_year = date("Y");
-                    for ($i = 0; $i < 11; $i++) {
-                        $year = $current_year + $i;
-                        echo "<option value='$year'>$year</option>";
-                    }
-                    ?>
-                </select>
-            </div>
-
-            <label for="card_cvv">Карта CVV:</label>
-            <input type="text" id="card_cvv" name="card_cvv" required>
-
-            <button type="submit">Төлемді аяқтау</button>
+            <button type="submit">Соманы есептеу</button>
         </form>
 
-        <?php if ($payment_success): ?>
-            <div class="info">
-                <p>Төлем сәтті жасалды!</p>
-                <a href="index.php" class="back-to-home">Басты бетке қайту</a>
-            </div>
+        <?php if ($total_amount > 0): ?>
+            <div class="total-amount">Жалпы сома: <?= $total_amount ?> ₸</div>
+            <form method="POST">
+                <label for="card_number">Карта нөмірі:</label>
+                <input 
+                    type="text" 
+                    id="card_number" 
+                    name="card_number" 
+                    maxlength="16" 
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 16)" 
+                    required>
+
+                <label for="card_expiry_month">Карта мерзімі (ай):</label>
+                <input 
+                    type="number" 
+                    id="card_expiry_month" 
+                    name="card_expiry_month" 
+                    min="1" 
+                    max="12" 
+                    oninput="if(this.value > 12) this.value = 12; if(this.value < 1) this.value = 1;" 
+                    required>
+
+                <label for="card_expiry_year">Карта мерзімі (жыл):</label>
+                <input 
+                    type="number" 
+                    id="card_expiry_year" 
+                    name="card_expiry_year" 
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 4)" 
+                    required>
+
+                <label for="card_cvv">CVV:</label>
+                <input 
+                    type="password" 
+                    id="card_cvv" 
+                    name="card_cvv" 
+                    maxlength="3" 
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 3)" 
+                    required>
+
+                <button type="submit">Төлеу</button>
+            </form>
         <?php endif; ?>
-    </div>
-</body>
-</html>
+
+        <?php if ($payment_success): ?>
+            <div class="info">Төлем сәтті жасалды!</div>
+            <?php endif; ?>
+
+            <a href="index.php" class="back-to-home">Басты бетке қайту</a>
