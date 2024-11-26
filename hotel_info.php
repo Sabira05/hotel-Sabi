@@ -21,7 +21,7 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 280%;
+            height: 180%;
             z-index: -1; /* Контенттің астында болады */
         }
 
@@ -74,11 +74,18 @@
             position: relative;display
             max-width: 100%;
             margin: 20px 0;
+
         }
         .slider img {
-            width: 100%;
-            border-radius: 10px;
+            width: auto; /* Ені автоматты түрде анықталады */
+            max-width: 100%; /* Блоктың шекарасынан шықпайды */
+            max-height: 300px; /* Биіктігін шектейміз */
+            object-fit: cover; /* Пропорцияны сақтай отырып, суретті қиып көрсету */
+            border-radius: 10px; /* Жиектерін жұмсартады */
+            margin: 0 auto; /* Ортасына туралау */
+            display: block; /* Суреттердің блоктық орналасуы */
         }
+
         .prev, .next {
             position: absolute;
             top: 50%;
@@ -186,6 +193,7 @@
             <img src="https://m.ahstatic.com/is/image/accorhotels/aja_p_5629-59?qlt=82&wid=1920&ts=1710858232816&dpr=off" alt="Hotel 3" style="display: none;">
             <img src="https://m.ahstatic.com/is/image/accorhotels/aja_p_5195-48?qlt=82&wid=1920&ts=1693942021648&dpr=off" alt="Hotel 4" style="display: none;">
             <img src="https://m.ahstatic.com/is/image/accorhotels/aja_p_5629-25?qlt=82&wid=1920&ts=1710944159228&dpr=off" alt="Hotel 5" style="display: none;">
+            <img src="https://m.ahstatic.com/is/image/accorhotels/aja_p_5629-41?qlt=82&wid=1920&ts=1693943551070&dpr=off" alt="Hotel 6" style="display: none;">
             <button class="next">&gt;</button>
         </div>
     <p>
