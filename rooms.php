@@ -35,7 +35,7 @@ $sql = "SELECT room_type, COUNT(*) - SUM(CASE WHEN bookings.room_type IS NOT NUL
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-image: url('https://m.ahstatic.com/is/image/accorhotels/aja_p_5553-45?qlt=82&wid=1920&ts=1729248820030&dpr=off');
+            background-image: url('https://phgcdn.com/images/uploads/SDFSB/masthead/SDFSB-masthead-theseelbachhiltonlouisville2.jpg');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -114,7 +114,13 @@ $sql = "SELECT room_type, COUNT(*) - SUM(CASE WHEN bookings.room_type IS NOT NUL
                 <button class="next">&gt;</button>
             </div>
             <p><strong>Бағасы:</strong> <?= $rooms['luxury']['room_price'] ?? '20 000' ?> ₸/түн</p>
-            <p><strong>Бос бөлмелер саны:</strong> <?= $rooms['luxury']['available_rooms'] ?? 0 ?></p>
+            <h3>Мүмкіндіктер:</h3>
+    <ul>
+        <li>Тауға қараған көрініс</li>
+        <li>Шипажайда толық қызмет көрсету</li>
+        <li>VIP қабылдау</li>
+        <li>Мини-бар</li>
+        <li>Жеке ванна бөлмесі</li>
             <a href="payment.php?room=luxury" class="book-now">Брон жасау</a>
         </div>
 
@@ -129,7 +135,17 @@ $sql = "SELECT room_type, COUNT(*) - SUM(CASE WHEN bookings.room_type IS NOT NUL
                 <button class="next">&gt;</button>
             </div>
             <p><strong>Бағасы:</strong> <?= $rooms['standard']['room_price'] ?? '15 000' ?> ₸/түн</p>
-            <p><strong>Бос бөлмелер саны:</strong> <?= $rooms['standard']['available_rooms'] ?? 0 ?></p>
+            <div class="room-features">
+    <h3>Мүмкіндіктер:</h3>
+    <ul>
+    <li>Әдемі интерьер</li>
+        <li>Тоңазытқыш</li>
+        <li>VIP қабылдау</li>
+        <li>Тегін Wi-Fi</li>
+        <li>Мини-бар</li>
+        <li>Жеке ванна бөлмесі</li>
+    </ul>
+</div>
             <a href="payment.php?room=standard" class="book-now">Брон жасау</a>
         </div>
 
@@ -144,7 +160,14 @@ $sql = "SELECT room_type, COUNT(*) - SUM(CASE WHEN bookings.room_type IS NOT NUL
                 <button class="next">&gt;</button>
             </div>
             <p><strong>Бағасы:</strong> <?= $rooms['vip']['room_price'] ?? '30 000' ?> ₸/түн</p>
-            <p><strong>Бос бөлмелер саны:</strong> <?= $rooms['vip']['available_rooms'] ?? 0 ?></p>
+            <h3>Мүмкіндіктер:</h3>
+            <li>Әдемі интерьер</li>
+        <li>Тоңазытқыш</li>
+        <li>Жеке бассейн</li>
+        <li>VIP қабылдау</li>
+        <li>Жоғары жылдамдықты интернет</li>
+        <li>Мини-бар мен сусындар</li>
+        <li>Жеке ванна бөлмесі</li>
             <a href="payment.php?room=vip" class="book-now">Брон жасау</a>
         </div>
     </div>
