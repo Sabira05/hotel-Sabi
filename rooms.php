@@ -35,7 +35,7 @@ $sql = "SELECT room_type, COUNT(*) - SUM(CASE WHEN bookings.room_type IS NOT NUL
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-image: url('https://phgcdn.com/images/uploads/SDFSB/masthead/SDFSB-masthead-theseelbachhiltonlouisville2.jpg');
+            background-image: url('https://www.gingerhotels.com/resourcefiles/hotelprofile/new-fff.jpg?version=12052024135735');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -169,7 +169,9 @@ $sql = "SELECT room_type, COUNT(*) - SUM(CASE WHEN bookings.room_type IS NOT NUL
         <li>Мини-бар мен сусындар</li>
         <li>Жеке ванна бөлмесі</li>
             <a href="payment.php?room=vip" class="book-now">Брон жасау</a>
+
         </div>
+        <a href="index.php" class="back-to-home">Басты бетке оралу</a>
     </div>
 
     <script>
